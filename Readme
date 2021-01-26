@@ -1,14 +1,59 @@
-## Step 1 ## Run3Winter20GS = GEN-SIM (PYTHIA8)
-cmsDriver.py Configuration/GenProduction/python/WprimeToENu_M_1000_TuneCP5_14TeV_pythia8_cfi.py --fileout file:WprimeToENu_M_1000_gensim.root --mc --eventcontent RAWSIM --datatier GEN-SIM --conditions 110X_mcRun3_2021_realistic_v6  --beamspot Run3RoundOptics25ns13TeVLowSigmaZ  --step GEN,SIM --nThreads 8 --geometry DB:Extended --era Run3 --python_filename WprimeToENu_M-1000_gensim_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring  -n 2000
+https://docs.google.com/presentation/d/1Q6FoEg8pIisy4UA3wAnQ4KXtxMA6bNqU05hHObKBXE8/edit?usp=sharing
 
-## Step 2 ## Run3Winter20DRPremixMiniAOD
-cmsDriver.py step1 --fileout file:WprimeToENu_M_1000_premix.root --pileup_input "dbs:/Neutrino_E-10_gun/RunIISummer17PrePremix-PURun3Winter20_110X_mcRun3_2021_realistic_v6-v2/PREMIX" --mc --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --conditions 110X_mcRun3_2021_realistic_v6 --step DIGI,DATAMIX,L1,DIGI2RAW,HLT:GRun --procModifiers premix_stage2 --nThreads 8 --geometry DB:Extended --datamix PreMix --era Run3 --filein file:WprimeToENu_M_1000_gensim.root --python_filename WprimeToENu_M-1000_premix_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
+================================================================
+Step1 : GEN-SIM
+
+cmsDriver.py Configuration/GenProduction/python/WprimeToENu_M_1000_TuneCP5_14TeV_pythia8_cfi.py --fileout file:step1_wptoenu_1000_GS.root --mc --eventcontent RAWSIM --datatier GEN-SIM --conditions 110X_mcRun3_2021_realistic_v6 --beamspot Run3RoundOptics25ns13TeVLowSigmaZ --step GEN,SIM --nThreads 8 --geometry DB:Extended --era Run3 --python_filename step1_wptoenu_1000_GS_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
+
+cmsRun step1_wptoenu_1000_GS_cfg.py >& cmdLog_step1_wptoenu_1000_GS.log &
+
+================================================================
+Step2 : Digi-Reco with Data PreMix PU --> DR with noPU
+
+# OLD Step 2 ## Run3Winter20DRPremixMiniAOD
+#cmsDriver.py step1 --fileout file:WprimeToENu_M_1000_premix.root --pileup_input "dbs:/Neutrino_E-10_gun/RunIISummer17PrePremix-PURun3Winter20_110X_mcRun3_2021_realistic_v6-v2/PREMIX" --mc --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --conditions 110X_mcRun3_2021_realistic_v6 --step DIGI,DATAMIX,L1,DIGI2RAW,HLT:GRun --procModifiers premix_stage2 --nThreads 8 --geometry DB:Extended --datamix PreMix --era Run3 --filein file:WprimeToENu_M_1000_gensim.root --python_filename WprimeToENu_M-1000_premix_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
+## user    139m11.207s
+
+	NB : We will not consider PU to save time for generation. 
+	So please use cmsDriver.py as follow:
+
+cmsDriver.py step1 --fileout file:step2_wptoenu_1000_DRnoPU.root --pileup NoPileUp --mc --eventcontent RAWSIM --datatier GEN-SIM-RAW --conditions 110X_mcRun3_2021_realistic_v6 --step DIGI,L1,DIGI2RAW,HLT:GRun --nThreads 8 --geometry DB:Extended --era Run3 --filein file:step1_wptoenu_1000_GS.root --python_filename step2_wptoenu_1000_DRnoPU_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
+
+cmsRun step2_wptoenu_1000_DRnoPU_cfg.py >& cmdLog_step2_wptoenu_1000_DRnoPU.log &
+
+================================================================
+Step3 : AODSIM, MINIAODSIM 
+
+# OLD Step 2-1 ## Run3Winter20DRPremixMiniAOD
+#cmsDriver.py step2 --filein file:WprimeToENu_M_1000_premix.root --fileout file:WprimeToENu_M_1000_miniaod.root --mc --eventcontent AODSIM,MINIAODSIM --runUnscheduled --datatier AODSIM,MINIAODSIM --conditions 110X_mcRun3_2021_realistic_v6 --step RAW2DIGI,L1Reco,RECO,RECOSIM,EI,PAT --procModifiers premix_stage2 --nThreads 8 --geometry DB:Extended --era Run3 --python_filename WprimeToENu_M-1000_miniaod_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
+
+	NB : We will not consider PU to save time for generation. 
+	So please use cmsDriver.py as follow:
+
+cmsDriver.py step2 --filein file:step2_wptoenu_1000_DRnoPU.root --fileout file:step3_wptoenu_1000_mini.root --mc --eventcontent AODSIM,MINIAODSIM --runUnscheduled --datatier AODSIM,MINIAODSIM --conditions 110X_mcRun3_2021_realistic_v6 --step RAW2DIGI,L1Reco,RECO,RECOSIM,EI,PAT --nThreads 8 --geometry DB:Extended --era Run3 --python_filename step3_wptoenu_1000_MINI_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
+
+time `cmsRun step3_wptoenu_1000_MINI_cfg.py >& cmdLog_step3_wptoenu_1000_MINI.log `
+
+================================================================
+Step4 : NANOAODSIM
+
+cmsDriver.py step1 --filein file:step3_wptoenu_1000_mini.root --fileout file:wptoenu_1000_nano.root --mc --eventcontent NANOAODSIM --runUnscheduled --datatier NANOAODSIM --conditions 110X_mcRun3_2021_realistic_v6 --step NANO --nThreads 8  --era Run3 --python_filename step4_wptoenu_1000_NANO_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring  --customise_commands="process.add_(cms.Service('InitRootHandlers', EnableIMT = cms.untracked.bool(False)))"  -n 2000
+
+================================================================
 
 
-## Step 2-1 ## Run3Winter20DRPremixMiniAOD
-cmsDriver.py step2 --filein file:WprimeToENu_M_1000_premix.root --fileout file:WprimeToENu_M_1000_miniaod.root --mc --eventcontent AODSIM,MINIAODSIM --runUnscheduled --datatier AODSIM,MINIAODSIM --conditions 110X_mcRun3_2021_realistic_v6 --step RAW2DIGI,L1Reco,RECO,RECOSIM,EI,PAT --procModifiers premix_stage2 --nThreads 8 --geometry DB:Extended --era Run3 --python_filename WprimeToENu_M-1000_miniaod_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
 
-=================================================
+#### Step 1 ## Run3Winter20GS = GEN-SIM (PYTHIA8)
+##cmsDriver.py Configuration/GenProduction/python/WprimeToENu_M_1000_TuneCP5_14TeV_pythia8_cfi.py --fileout file:WprimeToENu_M_1000_gensim.root --mc --eventcontent RAWSIM --datatier GEN-SIM --conditions 110X_mcRun3_2021_realistic_v6  --beamspot Run3RoundOptics25ns13TeVLowSigmaZ  --step GEN,SIM --nThreads 8 --geometry DB:Extended --era Run3 --python_filename WprimeToENu_M-1000_gensim_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring  -n 2000
+##
+#### Step 2 ## Run3Winter20DRPremixMiniAOD
+##cmsDriver.py step1 --fileout file:WprimeToENu_M_1000_premix.root --pileup_input "dbs:/Neutrino_E-10_gun/RunIISummer17PrePremix-PURun3Winter20_110X_mcRun3_2021_realistic_v6-v2/PREMIX" --mc --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --conditions 110X_mcRun3_2021_realistic_v6 --step DIGI,DATAMIX,L1,DIGI2RAW,HLT:GRun --procModifiers premix_stage2 --nThreads 8 --geometry DB:Extended --datamix PreMix --era Run3 --filein file:WprimeToENu_M_1000_gensim.root --python_filename WprimeToENu_M-1000_premix_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
+##
+##
+#### Step 2-1 ## Run3Winter20DRPremixMiniAOD
+##cmsDriver.py step2 --filein file:WprimeToENu_M_1000_premix.root --fileout file:WprimeToENu_M_1000_miniaod.root --mc --eventcontent AODSIM,MINIAODSIM --runUnscheduled --datatier AODSIM,MINIAODSIM --conditions 110X_mcRun3_2021_realistic_v6 --step RAW2DIGI,L1Reco,RECO,RECOSIM,EI,PAT --procModifiers premix_stage2 --nThreads 8 --geometry DB:Extended --era Run3 --python_filename WprimeToENu_M-1000_miniaod_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2000
+##
+##=================================================
 ## Step 1 ## Run3Winter20GS = GEN-SIM (PYTHIA8)
 #cmsDriver.py Configuration/GenProduction/python/WprimeToENu_M_1000_TuneCP5_14TeV_pythia8_cfi.py --fileout file:WprimeToENu_M_1000_gensim.root --mc --eventcontent RAWSIM --datatier GEN-SIM --conditions 110X_mcRun3_2021_realistic_v6  --beamspot Run3RoundOptics25ns13TeVLowSigmaZ  --step GEN,SIM --nThreads 8 --geometry DB:Extended --era Run3 --python_filename WprimeToMuNu_M-1000_gensim_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring  -n 2000
 
