@@ -1,0 +1,12 @@
+cmsDriver.py Configuration/GenProduction/python/TSG-Run3Winter20GS-00010-fragment.py --fileout file:TSG-Run3Winter20GS-00010.root --mc --eventcontent RAWSIM --datatier GEN-SIM --conditions 110X_mcRun3_2021_realistic_v6 --beamspot Run3RoundOptics25ns13TeVLowSigmaZ --step GEN,SIM --nThreads 8 --geometry DB:Extended --era Run3 --python_filename TSG-Run3Winter20GS-00010_1_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2355
+
+cmsDriver.py Configuration/GenProduction/python/TSG-Run3Winter20GS-00010-fragment.py --fileout file:TSG-Run3Winter20GS-00010.root --mc --eventcontent RAWSIM --datatier GEN-SIM --conditions 110X_mcRun3_2021_realistic_v6 --beamspot Run3RoundOptics25ns13TeVLowSigmaZ --step GEN,SIM --nThreads 8 --geometry DB:Extended --era Run3 --python_filename TSG-Run3Winter20GS-00010_1_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 2355
+
+cmsDriver.py Configuration/GenProduction/python/TSG-Run3Winter20wmLHEGS-00006-fragment.py --fileout file:TSG-Run3Winter20wmLHEGS-00006.root --mc --eventcontent RAWSIM,LHE --datatier GEN-SIM,LHE --conditions 110X_mcRun3_2021_realistic_v6 --beamspot Run3RoundOptics25ns13TeVLowSigmaZ --step LHE,GEN,SIM --nThreads 8 --geometry DB:Extended --era Run3 --python_filename TSG-Run3Winter20wmLHEGS-00006_1_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring --customise_commands process.RandomNumberGeneratorService.externalLHEProducer.initialSeed="int(${seed})" -n 1656
+
+cmsDriver.py Configuration/GenProduction/python/TRK-Run3Winter20wmLHEGS-00002-fragment.py --fileout file:TRK-Run3Winter20wmLHEGS-00002.root --mc --eventcontent RAWSIM,LHE --datatier GEN-SIM,LHE --conditions 110X_mcRun3_2021_realistic_v6 --beamspot Run3RoundOptics25ns13TeVLowSigmaZ --step LHE,GEN,SIM --nThreads 4 --geometry DB:Extended --era Run3 --python_filename TRK-Run3Winter20wmLHEGS-00002_1_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring --customise_commands process.RandomNumberGeneratorService.externalLHEProducer.initialSeed="int(${seed})" -n 3910
+
+
+cmsDriver.py Configuration/GenProduction/python/WprimeToENu_M_1000_TuneCP5_14TeV_pythia8_cfi.py --fileout file:WprimeToENu_M_1000_gensim.root --mc --eventcontent RAWSIM --datatier GEN-SIM --conditions 110X_mcRun3_2021_realistic_v6  --beamspot Run3RoundOptics25ns13TeVLowSigmaZ  --step GEN,SIM --nThreads 8 --geometry DB:Extended --era Run3 --python_filename WprimeToMuNu_M-1000_gensim_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring  -n 2000
+
+

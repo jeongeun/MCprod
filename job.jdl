@@ -1,0 +1,33 @@
+## ---1. Basic set 
+executable = runAtOnce.sh
+universe = vanilla
+output   = condorLog/condorLog_$(Cluster)_$(Process).log
+error    = condorLog/condorLog_$(Cluster)_$(Process).log
+log      = /dev/null
+should_transfer_files = yes
+when_to_transfer_output = ON_EXIT
+
+## ---2. voms proxy init in condor job
+# You should first run the voms-proxy-init to use this option
+use_x509userproxy = True
+
+## ---3. Copy necessary files to condor directory (/srv)
+transfer_input_files = runAtOnce.sh, runStep1.sh, runStep23.sh, Configuration/GenProduction/python/WprimeToENu_M_1000_TuneCP5_14TeV_pythia8_cfi.py,  /tmp/x509up_u521
+#runStep4.sh, /tmp/x509up_u521
+
+
+## ---4. Copy output files to my condorOut directory
+transfer_output_files = condorOut 
+
+## ---5. Exclude some machines
+#requirements = (machine != "cms-gpu01.sdfarm.kr")
+#requirements = $(requirements) && ( HasSingularity == true )
+
+
+## Virtural container for SL6--##
+## If you run this script on SL7 evnironment
+#+SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel6-m202001"
+
+#arguments = mass    RunN      Idx    nEvt
+arguments = 1000 $(Cluster) $(Process) 5
+queue 2
