@@ -8,7 +8,8 @@ cd /x3/cms/jelee/MCProd/Run3Gen/CMSSW_11_0_3/src
 eval `scram runtime -sh`
 
 cd $TopDir
-export X509_USER_PROXY=/tmp/x509up_u521
+export X509_USER_PROXY=$TopDir/x509up_u521
+echo "##Start !! voms-proxy-info "
 voms-proxy-info
 
 Mass=$1

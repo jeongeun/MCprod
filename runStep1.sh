@@ -28,7 +28,7 @@ output_gs=${5}
 
 #basename=step1_wptoenu_${mass}_GS
 cfg_step1=${output_gs/.root/_cfg.py}
-chmod 777 ${cfg_step1}
+
 cat << EOF > ${cfg_step1}
 # Auto generated configuration file
 # using: 
@@ -67,7 +67,7 @@ process.source = cms.Source("EmptySource", firstRun=cms.untracked.uint32(${First
 # Set different random numbers seeds every time one runs cmsRun
 from IOMC.RandomEngine.RandomServiceHelper import RandomNumberServiceHelper
 randSvc = RandomNumberServiceHelper(process.RandomNumberGeneratorService)
-randSvc.populate())
+randSvc.populate()
 
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
@@ -98,7 +98,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('Configuration/GenProduction/python/WprimeToENu_M_${mass}_TuneCP5_14TeV_pythia8_cfi.py nevts:${nEvt}'),
+    annotation = cms.untracked.string('WprimeToENu_M_${mass}_TuneCP5_14TeV_pythia8_cfi.py nevts:${nEvt}'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('\$Revision: 1.19 $')
 )
