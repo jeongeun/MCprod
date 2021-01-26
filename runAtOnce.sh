@@ -59,8 +59,9 @@ s3ROOT=`find . -maxdepth 1 -type f -name "step3_*mini*.root"`
 
 
 
+if [ ! -d condorLog ]; then mkdir -p condorLog ; fi
+if [ ! -d condorOut ]; then mkdir -p condorOut ; fi
 
-mkdir condorOut/
 mv *.log *_cfg.py ${s1ROOT} ${s2ROOT} ${s3ROOT} condorOut/
 #${s4ROOT}  condorOut/
 
