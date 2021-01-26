@@ -23,9 +23,6 @@ cfg_step3=${cfg_step3/.root/_cfg.py}
 
 echo "### input $input_gs ; output step2 $output_aod ;step3 $output_mini  ;pu noPU "
 
-chmod 777 ${cfg_step2}
-chmod 777 ${cfg_step3}
-
 cat << EOF > ${cfg_step2}
 # Auto generated configuration file
 # using:
@@ -433,12 +430,14 @@ process = customiseEarlyDelete(process)
 # End adding early deletion
 EOF
 
+chmod +x ${cfg_step2}
 echo "### cmsRun ${cfg_step2} #step2 digi-reco noPU "
 cmsRun ${cfg_step2} 2>&1 
 which cmsRun
 ls -ahl *.root *.py
 #echo "move step2 1"
 
+chmod +x ${cfg_step3}
 echo "### cmsRun ${cfg_step3} #step3 aod-miniaod"
 cmsRun ${cfg_step3} 2>&1
 
